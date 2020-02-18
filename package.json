@@ -1,7 +1,7 @@
 {
   "name": "sdk.nodejs.ssn.digital",
   "version": "1.0.0",
-  "description": "SDK for payment/wallet mobile app with SSN",
+  "description": "NodeJS SDK for integrating with SSN",
   "main": "src/index.js",
   "repository": {
     "type": "git",
