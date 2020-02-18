@@ -1,0 +1,19 @@
+{
+  "name": "sdk.nodejs.ssn.digital",
+  "version": "1.0.0",
+  "description": "SDK for payment/wallet mobile app with SSN",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@git.sabay.com:payment-network/sdk/sdk.nodejs.ssn.digital.git"
+  },
+  "author": "Sabay Digital Coperation",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "lodash": "^4.17.15",
+    "querystring": "^0.2.0",
+    "stellar-sdk": "^3.0.0",
+    "sdk.nacl.ssn.digital": "git+https://ssn-nacl:4_yXuDEoZX-fxEjey1Rp@git.sabay.com/payment-network/sdk/sdk.nacl.ssn.digital#master"
+  }
+}
