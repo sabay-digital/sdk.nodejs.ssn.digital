@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "repository": {
     "type": "git",
-    "url": "https://git.sabay.com/payment-network/sdk/sdk.nodejs.ssn.digital.git"
+    "url": "https://github.com/sabay-digital/sdk.nodejs.ssn.digital.git"
   },
   "author": "Sabay Digital Coperation",
   "license": "ISC",
