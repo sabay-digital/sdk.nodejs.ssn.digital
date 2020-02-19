@@ -1,20 +1,21 @@
 var {
   CreatePayment,
-  resolvePA,
-  verifyTrust,
+  ResolvePA,
+  VerifyTrust,
   SignTxn,
   SignTxnService,
   SubmitTxn
 } = require('./payments/index')
 
-
+var sendSms = require('./sms/index')
 module.exports = {
   CreatePayment,
   resolvePA,
   verifyTrust,
   SignTxn,
   SignTxnService,
-  SubmitTxn
+  SubmitTxn,
+  VerifySignature
 }
 
 // const from = 'GCDOUWMTDCD6CBWZJRMJHAPRMTIR6FPN7EW774OFV3R7ZT6DVZNW2BGM'

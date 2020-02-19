@@ -124,20 +124,23 @@ const SubmitTxn = (xdr, apiUrl) => new Promise((resolve, reject) => {
  * @des `This is a generic function for verify trust`
  * @return {Promise}
  */
-const resolvePA = (paymentAddress, apiUrl) => {
+const ResolvePA = (hash, signature, signer, ssnAccount, apiUrl) => {
   return new Promise((resolve, reject) => {
     try {
       // resolve network address from payment address
-      return axios.post(apiUrl,
+      return axios.post(apiUrl + '/resolve/' + paymentAddress,
         querystring.stringify({
-          payment_address: paymentAddress
+          hash: hash,
+          signature: signature,
+          signer: signer,
+          ssn_account: ssnAccount
         })
       ).then(result => {
         if (result.data.status && result.data.status !== 200) {
           reject(result.data)
         }
         
-        resolve(result)
+        resolve(result.data)
       })
     } catch (error) {
       reject(error)
@@ -154,21 +157,45 @@ const resolvePA = (paymentAddress, apiUrl) => {
  * @return {Promise}
  */
 
-const verifyTrust = (publicKey, assetCode, assetIssuer, apiUrl) => new Promise((resolve, reject) => {
-  axios.post(apiUrl,
+const VerifyTrust = (publicKey, assetCode, assetIssuer, apiUrl) => new Promise((resolve, reject) => {
+  axios.post(apiUrl + '/verify/trust',
     querystring.stringify({
       account: publicKey,
       asset_code: assetCode,
       asset_issuer: assetIssuer
+    })
+  ).then(result => {
+    if (result.data.status === 200 && result.data.title === 'asset will be accepted by account') {
+      resolve(true)
+    }
+    resolve(false)
+  }).catch(reject)
+})
+
+/**
+ * @param {string} publicKey
+ * @param {string} signature
+ * @param {string} message
+ * @param {string} apiUrl
+ * @returns {Promise<Object>}
+ */
+const VerifySignature = (publicKey, signature, message, apiUrl) => new Promise((resolve, reject) => {
+  // CALL TO SSN API FOR CHECK TRUSTLINE
+  return axios.post(apiUrl + '/verify/signature',
+    querystring.stringify({
+      public_key: publicKey,
+      signature: signature,
+      message: message
     })
   ).then(result => resolve(result)).catch(reject)
 })
 
 module.exports = {
   CreatePayment,
-  resolvePA,
-  verifyTrust,
+  ResolvePA,
+  VerifyTrust,
   SignTxn,
   SignTxnService,
-  SubmitTxn
+  SubmitTxn,
+  VerifySignature
 }
