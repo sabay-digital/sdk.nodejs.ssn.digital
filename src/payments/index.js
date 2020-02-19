@@ -5,27 +5,27 @@ var StellarSDK = require('stellar-sdk')
 /**
  * @param {string} from
  * @param {string} to
- * @param {string} issuer
+ * @param {string} assetIssuer
  * @param {string} amount
  * @param {string} memo
  * @param {string} assetCode
- * @param {string} apiUrl
+ * @param {string} api
  *
  * @returns {Promise<Object>}
  */
 
-const CreatePayment = (from, to, issuer, amount, memo, assetCode, apiUrl) => {
+const CreatePayment = (from, to, amount, assetCode, assetIssuer, memo, api) => {
   return new Promise((resolve, reject) => {
    
     // Create transaction channel accounts on the ssn api
-    return axios.post(apiUrl + '/create/transaction',
+    return axios.post(api + '/create/transaction',
       querystring.stringify({
         from: from,
         to: to,
         amount: amount,
         memo: memo,
         asset_code: assetCode,
-        asset_issuer: issuer
+        asset_issuer: assetIssuer
       })
     )
       .then(result => {
@@ -72,17 +72,17 @@ const SignTxn = (xdr, signer, networkPassphrase) => new Promise((resolve, reject
 
 /**
  * @param {string} xdr
- * @param {string} signerApiUrl
+ * @param {string} signer
  *
  * @returns {Promise<Object>}
  */
 // SignTxnService takes a base64 encoded XDR envelope and sends it to the specified sign service API
-const SignTxnService = (xdr, signerApiUrl) => new Promise((resolve, reject) => {
+const SignTxnService = (xdr, signer) => new Promise((resolve, reject) => {
   try {
     const signRequest = {
       xdr_string: xdr
     }
-    return axios.post(signerApiUrl, signRequest)
+    return axios.post(signer, signRequest)
     .then(result => {
       return resolve(result.data.xdr_string)
     })
@@ -95,14 +95,14 @@ const SignTxnService = (xdr, signerApiUrl) => new Promise((resolve, reject) => {
 
 /**
  * @param {string} xdr
- * @param {string} apiUrl
+ * @param {string} api
  *
  * @returns {Promise<Object>}
  */
 
-const SubmitTxn = (xdr, apiUrl) => new Promise((resolve, reject) => {
+const SubmitTxn = (xdr, api) => new Promise((resolve, reject) => {
   try {
-    return axios.post(apiUrl + '/transactions',
+    return axios.post(api + '/transactions',
       querystring.stringify({
         tx: xdr
       })
@@ -120,20 +120,25 @@ const SubmitTxn = (xdr, apiUrl) => new Promise((resolve, reject) => {
 
 /**
  * @param {string} paymentAddress
- * @param {string} apiUrl
+ * @param {string} hash
+ * @param {string} signature
+ * @param {string} signer
+ * @param {string} ssnAcc
+ * @param {string} resolverURL
  * @des `This is a generic function for verify trust`
  * @return {Promise}
  */
-const ResolvePA = (hash, signature, signer, ssnAccount, apiUrl) => {
+
+const ResolvePA = (paymentAddress, hash, signature, signer, ssnAcc, resolverURL) => {
   return new Promise((resolve, reject) => {
     try {
       // resolve network address from payment address
-      return axios.post(apiUrl + '/resolve/' + paymentAddress,
+      return axios.post(resolverURL + '/resolve/' + paymentAddress,
         querystring.stringify({
           hash: hash,
           signature: signature,
           signer: signer,
-          ssn_account: ssnAccount
+          ssn_account: ssnAcc
         })
       ).then(result => {
         if (result.data.status && result.data.status !== 200) {
@@ -149,19 +154,19 @@ const ResolvePA = (hash, signature, signer, ssnAccount, apiUrl) => {
 }
 
 /**
- * @param {string} publicKey
- * @param {string} assetCode
+ * @param {string} destination
+ * @param {string} asset
  * @param {string} assetIssuer
- * @param {string} apiUrl
+ * @param {string} api
  * @des `This is a generic function for verify trust`
  * @return {Promise}
  */
 
-const VerifyTrust = (publicKey, assetCode, assetIssuer, apiUrl) => new Promise((resolve, reject) => {
-  axios.post(apiUrl + '/verify/trust',
+const VerifyTrust = (destination, asset, assetIssuer, api) => new Promise((resolve, reject) => {
+  axios.post(api + '/verify/trust',
     querystring.stringify({
-      account: publicKey,
-      asset_code: assetCode,
+      account: destination,
+      asset_code: asset,
       asset_issuer: assetIssuer
     })
   ).then(result => {
@@ -176,12 +181,12 @@ const VerifyTrust = (publicKey, assetCode, assetIssuer, apiUrl) => new Promise((
  * @param {string} publicKey
  * @param {string} signature
  * @param {string} message
- * @param {string} apiUrl
+ * @param {string} api
  * @returns {Promise<Object>}
  */
-const VerifySignature = (publicKey, signature, message, apiUrl) => new Promise((resolve, reject) => {
+const VerifySignature = (message, signature, publicKey, api) => new Promise((resolve, reject) => {
   // CALL TO SSN API FOR CHECK TRUSTLINE
-  return axios.post(apiUrl + '/verify/signature',
+  return axios.post(api + '/verify/signature',
     querystring.stringify({
       public_key: publicKey,
       signature: signature,

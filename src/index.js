@@ -7,11 +7,10 @@ var {
   SubmitTxn
 } = require('./payments/index')
 
-var sendSms = require('./sms/index')
 module.exports = {
   CreatePayment,
-  resolvePA,
-  verifyTrust,
+  ResolvePA,
+  VerifyTrust,
   SignTxn,
   SignTxnService,
   SubmitTxn,
