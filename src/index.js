@@ -4,7 +4,8 @@ var {
   VerifyTrust,
   SignTxn,
   SignTxnService,
-  SubmitTxn
+  SubmitTxn,
+  VerifySignature
 } = require('./payments/index')
 
 module.exports = {
