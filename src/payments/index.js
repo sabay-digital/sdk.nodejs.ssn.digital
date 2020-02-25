@@ -192,7 +192,12 @@ const VerifySignature = (message, signature, publicKey, api) => new Promise((res
       signature: signature,
       message: message
     })
-  ).then(result => resolve(result)).catch(reject)
+  ).then(result => {
+    if (result.data.status === 200) {
+      resolve(true)
+    }
+    resolve(false)
+  }).catch(reject)
 })
 
 module.exports = {
