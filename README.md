@@ -8,7 +8,7 @@ Add the following to your `package.json`:
 
 ```json
 {
-	"sdk.nodejs.ssn.digital": "",
+	"sdk.nodejs.ssn.digital": "git+https://node-sdk:NgDzyF_yYszpry62sYxF@git.sabay.com/payment-network/sdk/sdk.nodejs.ssn.digital#master"
 }
 ```
 ### VerifySignature
