@@ -1,2 +1,13 @@
 Version 1.0.0
 - Initial commit
+- Implements:
+  CreatePayment,
+  ResolvePA,
+  VerifyTrust,
+  SignTxn,
+  SignTxnService,
+  SubmitTxn,
+  VerifySignature
+  VerifySignature,
+  VerifySigner,
+  VerifyHomeDomain
