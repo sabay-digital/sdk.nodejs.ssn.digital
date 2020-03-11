@@ -200,6 +200,33 @@ const VerifySignature = (message, signature, publicKey, api) => new Promise((res
   }).catch(reject)
 })
 
+/**
+ * @desc VerifySigner checks whether the provided signer is a signer on an SSN account
+ * @param {string} signer
+ * @param {string} ssnAccount
+ * @return {Boolean}
+ */
+const VerifySigner = (signer, ssnAccount, api) => new Promise((resolve, reject) => {
+  return axios.post(api + '/verify/signer', querystring.stringify({
+    signer: signer,
+    ssn_account: ssnAccount
+  }))
+    .then(result => {
+      if (result.data.status === 200) {
+        return resolve(true)
+      }
+
+      return resolve(false)
+    }).catch(error => {
+      if (error.response.data.status !== 200) {
+        console.log(error.response)
+        return resolve(false)
+      }
+      // UNEXPECTED ERROR
+      return reject(error)
+    })
+})
+
 module.exports = {
   CreatePayment,
   ResolvePA,
@@ -207,5 +234,6 @@ module.exports = {
   SignTxn,
   SignTxnService,
   SubmitTxn,
-  VerifySignature
+  VerifySignature,
+  VerifySigner
 }
