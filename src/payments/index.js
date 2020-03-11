@@ -171,10 +171,17 @@ const VerifyTrust = (destination, asset, assetIssuer, api) => new Promise((resol
     })
   ).then(result => {
     if (result.data.status === 200 && result.data.title === 'asset will be accepted by account') {
-      resolve(true)
+      return resolve(true)
     }
-    resolve(false)
-  }).catch(reject)
+    return resolve(false)
+  }).catch(error => {
+    if (error.response.data.status !== 200) {
+      console.log(error.response)
+      return resolve(false)
+    }
+    // UNEXPECTED ERROR
+    return reject(error)
+  })
 })
 
 /**
@@ -194,10 +201,17 @@ const VerifySignature = (message, signature, publicKey, api) => new Promise((res
     })
   ).then(result => {
     if (result.data.status === 200) {
-      resolve(true)
+      return resolve(true)
     }
-    resolve(false)
-  }).catch(reject)
+    return resolve(false)
+  }).catch(error => {
+    if (error.response.data.status !== 200) {
+      console.log(error.response)
+      return resolve(false)
+    }
+    // UNEXPECTED ERROR
+    return reject(error)
+  })
 })
 
 /**
@@ -241,7 +255,10 @@ const VerifyHomeDomain = (ssnAccount, homeDomain, api) => new Promise((resolve, 
         return resolve(true)
       }
       return resolve(false)
-    }).catch(reject)
+    }).catch(error => {
+      console.log(error)
+      return resolve(false)
+    })
 })
 
 module.exports = {
