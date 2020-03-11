@@ -227,6 +227,23 @@ const VerifySigner = (signer, ssnAccount, api) => new Promise((resolve, reject) 
     })
 })
 
+/**
+ * @desc verify home domain load from network and match with the home domain from payment address
+ * @param {string} ssnAccount
+ * @param {string} homeDomain
+ * @param {string} api
+ * @returns {Promise}
+ */
+const VerifyHomeDomain = (ssnAccount, homeDomain, api) => new Promise((resolve, reject) => {
+  return axios.get(api + '/accounts/' + ssnAccount)
+    .then(account => {
+      if (account.data.home_domain && account.data.home_domain === homeDomain) {
+        return resolve(true)
+      }
+      return resolve(false)
+    }).catch(reject)
+})
+
 module.exports = {
   CreatePayment,
   ResolvePA,
@@ -235,5 +252,6 @@ module.exports = {
   SignTxnService,
   SubmitTxn,
   VerifySignature,
-  VerifySigner
+  VerifySigner,
+  VerifyHomeDomain
 }
