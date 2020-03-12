@@ -171,10 +171,17 @@ const VerifyTrust = (destination, asset, assetIssuer, api) => new Promise((resol
     })
   ).then(result => {
     if (result.data.status === 200 && result.data.title === 'asset will be accepted by account') {
-      resolve(true)
+      return resolve(true)
     }
-    resolve(false)
-  }).catch(reject)
+    return resolve(false)
+  }).catch(error => {
+    if (error.response.data.status !== 200) {
+      console.log(error.response)
+      return resolve(false)
+    }
+    // UNEXPECTED ERROR
+    return reject(error)
+  })
 })
 
 /**
@@ -192,7 +199,66 @@ const VerifySignature = (message, signature, publicKey, api) => new Promise((res
       signature: signature,
       message: message
     })
-  ).then(result => resolve(result)).catch(reject)
+  ).then(result => {
+    if (result.data.status === 200) {
+      return resolve(true)
+    }
+    return resolve(false)
+  }).catch(error => {
+    if (error.response.data.status !== 200) {
+      console.log(error.response)
+      return resolve(false)
+    }
+    // UNEXPECTED ERROR
+    return reject(error)
+  })
+})
+
+/**
+ * @desc VerifySigner checks whether the provided signer is a signer on an SSN account
+ * @param {string} signer
+ * @param {string} ssnAccount
+ * @return {Boolean}
+ */
+const VerifySigner = (signer, ssnAccount, api) => new Promise((resolve, reject) => {
+  return axios.post(api + '/verify/signer', querystring.stringify({
+    signer: signer,
+    ssn_account: ssnAccount
+  }))
+    .then(result => {
+      if (result.data.status === 200) {
+        return resolve(true)
+      }
+
+      return resolve(false)
+    }).catch(error => {
+      if (error.response.data.status !== 200) {
+        console.log(error.response)
+        return resolve(false)
+      }
+      // UNEXPECTED ERROR
+      return reject(error)
+    })
+})
+
+/**
+ * @desc verify home domain load from network and match with the home domain from payment address
+ * @param {string} ssnAccount
+ * @param {string} homeDomain
+ * @param {string} api
+ * @returns {Promise}
+ */
+const VerifyHomeDomain = (ssnAccount, homeDomain, api) => new Promise((resolve, reject) => {
+  return axios.get(api + '/accounts/' + ssnAccount)
+    .then(account => {
+      if (account.data.home_domain && account.data.home_domain === homeDomain) {
+        return resolve(true)
+      }
+      return resolve(false)
+    }).catch(error => {
+      console.log(error)
+      return resolve(false)
+    })
 })
 
 module.exports = {
@@ -202,5 +268,7 @@ module.exports = {
   SignTxn,
   SignTxnService,
   SubmitTxn,
-  VerifySignature
+  VerifySignature,
+  VerifySigner,
+  VerifyHomeDomain
 }

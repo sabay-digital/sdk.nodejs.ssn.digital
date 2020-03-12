@@ -8,7 +8,7 @@ Add the following to your `package.json`:
 
 ```json
 {
-	"sdk.nodejs.ssn.digital": "",
+	"sdk.nodejs.ssn.digital": "git+https://node-sdk:NgDzyF_yYszpry62sYxF@git.sabay.com/payment-network/sdk/sdk.nodejs.ssn.digital#master"
 }
 ```
 ### VerifySignature
@@ -39,6 +39,35 @@ const assetIssuer = "GCDOUWMTDCD6CBWZJRMJHAPRMTIR6FPN7EW774OFV3R7ZT6DVZNW2BGM"
 const api = "https://api.master.ssn.digital/v1"
 
 VerifyTrust(destination, asset, assetIssuer, api).then(result => {
+  console.log(result)
+}).catch(error =>  console.log(error))
+```
+### VerifySigner
+
+This function can be used to verify singer account of ssn_account
+```javascript
+var { VerifySigner } = require('sdk.nodejs.ssn.digital');
+
+const signer = "GAKRDOUGEJI2JPE2M4JUYUQXM2BVIZWKCI2ZAXY5ZJPXSNPZW3EPBF6X"
+const ssnAccount = "GCDOUWMTDCD6CBWZJRMJHAPRMTIR6FPN7EW774OFV3R7ZT6DVZNW2BGM"
+const api = "https://api.master.ssn.digital/v1"
+
+VerifySigner(signer, ssnAccount, api).then(result => {
+  console.log(result)
+}).catch(error =>  console.log(error))
+```
+
+### VerifyHomeDomain
+
+This function can be used to verify home domain load from ssn_account and match with home domain from payment address
+```javascript
+var { VerifyHomeDomain } = require('sdk.nodejs.ssn.digital');
+
+const homeDomain = "pp.master.mysabay.com"
+const ssnAccount = "GCDOUWMTDCD6CBWZJRMJHAPRMTIR6FPN7EW774OFV3R7ZT6DVZNW2BGM"
+const api = "https://api.master.ssn.digital/v1"
+
+VerifyHomeDomain(ssnAccount, homeDomain, api).then(result => {
   console.log(result)
 }).catch(error =>  console.log(error))
 ```
