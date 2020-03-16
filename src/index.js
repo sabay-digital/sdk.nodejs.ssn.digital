@@ -7,7 +7,8 @@ var {
   SubmitTxn,
   VerifySignature,
   VerifySigner,
-  VerifyHomeDomain
+  VerifyHomeDomain,
+  GenerateResolverRequest
 } = require('./payments/index')
 
 module.exports = {
@@ -19,7 +20,8 @@ module.exports = {
   SubmitTxn,
   VerifySignature,
   VerifySigner,
-  VerifyHomeDomain
+  VerifyHomeDomain,
+  GenerateResolverRequest
 }
 
 

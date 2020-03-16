@@ -1,7 +1,7 @@
 var axios = require('axios')
 var querystring = require('querystring')
 var StellarSDK = require('stellar-sdk')
-
+var crypto = require('crypto')
 /**
  * @param {string} from
  * @param {string} to
@@ -261,6 +261,38 @@ const VerifyHomeDomain = (ssnAccount, homeDomain, api) => new Promise((resolve, 
     })
 })
 
+/**
+ * 
+ * @param {string} ssnAccountSK 
+ * @param {string} message 
+ * @return {Object}
+ */
+const GenerateResolverRequest = (ssnAccountSK, message) => new Promise((resolve, reject) => {
+  try {
+    const keyPair = StellarSDK.Keypair.fromSecret(ssnAccountSK)
+
+    // Generate sha256 hash
+    const hash = crypto.createHash('sha256')
+    hash.update(message)
+    const sha256Hash = hash.digest('hex')
+
+    // sign signature
+    const signature = keyPair.sign(Buffer.from(sha256Hash, 'hex'))
+
+    const requestBody = {
+      ssn_account: keyPair.publicKey(),
+      signer: keyPair.publicKey(),
+      hash: sha256Hash,
+      signature: signature.toString('hex')
+    }
+
+    return resolve(requestBody)
+  } catch (error) {
+    return reject(error)
+  }
+})
+
+
 module.exports = {
   CreatePayment,
   ResolvePA,
@@ -270,5 +302,6 @@ module.exports = {
   SubmitTxn,
   VerifySignature,
   VerifySigner,
-  VerifyHomeDomain
+  VerifyHomeDomain,
+  GenerateResolverRequest
 }
