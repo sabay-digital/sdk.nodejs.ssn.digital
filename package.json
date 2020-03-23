@@ -1,6 +1,6 @@
 {
   "name": "sdk.nodejs.ssn.digital",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "NodeJS SDK for integrating with SSN",
   "main": "src/index.js",
   "repository": {

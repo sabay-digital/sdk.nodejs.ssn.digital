@@ -8,7 +8,7 @@ Add the following to your `package.json`:
 
 ```json
 {
-	"sdk.nodejs.ssn.digital": "git+https://github.com/sabay-digital/sdk.nodejs.ssn.digital"
+	"sdk.nodejs.ssn.digital": "git+https://node-sdk:NgDzyF_yYszpry62sYxF@git.sabay.com/payment-network/sdk/sdk.nodejs.ssn.digital#master"
 }
 ```
 ### VerifySignature
@@ -152,4 +152,18 @@ const api = "https://api.master.ssn.digital/v1"
 SubmitTxn(xdr, api).then(result => {
   console.log(result)
 }).catch(error =>  console.log(error))
+```
+
+### Generate Resolver Request
+
+This function can be used for generate request body for resolver
+```javascript
+var { GenerateResolverRequest } = require('sdk.nodejs.ssn.digital');
+
+const ssnAccountSK = "SCKUT7ZF634URNLYO77EN7SFDNOYVGEOZD7MWKNLUJ5TF4KC6EAOAFIZ"
+const message = "Hello"
+
+GenerateResolverRequest(ssnAccountSK, message).then(result => {
+  console.log(result)
+})
 ```
