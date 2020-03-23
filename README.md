@@ -153,3 +153,17 @@ SubmitTxn(xdr, api).then(result => {
   console.log(result)
 }).catch(error =>  console.log(error))
 ```
+
+### Generate Resolver Request
+
+This function can be used for generate request body for resolver
+```javascript
+var { GenerateResolverRequest } = require('sdk.nodejs.ssn.digital');
+
+const ssnAccountSK = "SCKUT7ZF634URNLYO77EN7SFDNOYVGEOZD7MWKNLUJ5TF4KC6EAOAFIZ"
+const message = "Hello"
+
+GenerateResolverRequest(ssnAccountSK, message).then(result => {
+  console.log(result)
+})
+```
