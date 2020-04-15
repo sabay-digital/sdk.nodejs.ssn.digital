@@ -24,6 +24,21 @@ var {
   parseDate
 } = require('./utils/index')
 
+// Constants
+
+var {
+  STATUS_PENDING,
+  STATUS_VERIFYING,
+  STATUS_COMPLETED,
+  STATUS_FAILED,
+  STATUS_CANCELED,
+  STATUS_REJECTED
+} = require('./constants/index')
+
+// Error-slack
+
+var streamErrorSlack = require('./error-slack/index')
+
 module.exports = {
   CreatePayment,
   ResolvePA,
@@ -42,7 +57,14 @@ module.exports = {
   now,
   today,
   chString,
-  parseDate
+  parseDate,
+  streamErrorSlack,
+  STATUS_PENDING,
+  STATUS_VERIFYING,
+  STATUS_COMPLETED,
+  STATUS_FAILED,
+  STATUS_CANCELED,
+  STATUS_REJECTED
 }
 
 

@@ -14,6 +14,7 @@
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "querystring": "^0.2.0",
+    "slack-node": "^0.1.8",
     "stellar-sdk": "^4.1.0"
   }
 }

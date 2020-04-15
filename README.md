@@ -310,5 +310,42 @@ const  date = '2019-07-22 00:00:00';
 console.log(parseDate(date)); // return '2019-07-22'
 
 ```
+# ssn-stream-error-slack
 
+Send the error in the Stream to slack
 
+### streamErrorSlack(slackWebHook, error) : {void}
+
+Send an error in the stream file to Slack channel.
+
+```javascript
+var { streamErrorSlack } = require('sdk.nodejs.ssn.digital');
+
+const error = new Error('Something went wrong');
+
+// will send an error to slack channel
+streamErrorSlack(slackWebHook, error);
+```
+
+# ssn-constants
+
+The package that stored the frequently used constant values on SSN.
+
+## Usage
+
+```javascript
+var ssnConstants = require('sdk.nodejs.ssn.digital');
+
+console.log(ssnConstants.STATUS_PENDING); // pending
+```
+
+## Variables
+
+```javascript
+const STATUS_PENDING = 'pending';
+const STATUS_VERIFYING = 'verifying';
+const STATUS_COMPLETED = 'completed';
+const STATUS_FAILED = 'failed';
+const STATUS_CANCELED = 'canceled';
+const STATUS_REJECTED = 'rejected';
+```
