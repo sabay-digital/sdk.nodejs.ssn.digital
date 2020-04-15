@@ -275,17 +275,20 @@ const GenerateResolverRequest = (ssnAccountSK, message) => new Promise((resolve,
     const hash = crypto.createHash('sha256')
     hash.update(message)
     const sha256Hash = hash.digest('hex')
-
+    const str = Buffer.from(sha256Hash, 'hex')
+    console.log(sha256Hash)
+    console.log(str)
+    console.log(str.toString('hex'))
     // sign signature
-    const signature = keyPair.sign(Buffer.from(sha256Hash, 'hex'))
-
+    const signature = keyPair.sign(str)
+    
     const requestBody = {
       ssn_account: keyPair.publicKey(),
       signer: keyPair.publicKey(),
       hash: sha256Hash,
       signature: signature.toString('hex')
     }
-
+    
     return resolve(requestBody)
   } catch (error) {
     return reject(error)
@@ -305,3 +308,11 @@ module.exports = {
   VerifyHomeDomain,
   GenerateResolverRequest
 }
+
+
+const ssnAccountSK = "SALGX3VE6EP6DJL6YJLUDDO6GMA5ZFS62EC5YVCWSDRHVTCACHYEZ5R5"
+const message = "http://localhost:3000/v1/charge/onetime/37837941*master.mysabay.com"
+
+GenerateResolverRequest(ssnAccountSK, message).then(result => {
+  console.log(result)
+})
