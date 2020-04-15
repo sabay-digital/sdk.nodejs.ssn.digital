@@ -35,6 +35,10 @@ var {
   STATUS_REJECTED
 } = require('./constants/index')
 
+// Error-slack
+
+var streamErrorSlack = require('./error-slack/index')
+
 module.exports = {
   CreatePayment,
   ResolvePA,
@@ -54,6 +58,7 @@ module.exports = {
   today,
   chString,
   parseDate,
+  streamErrorSlack,
   STATUS_PENDING,
   STATUS_VERIFYING,
   STATUS_COMPLETED,
