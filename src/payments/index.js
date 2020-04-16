@@ -308,11 +308,3 @@ module.exports = {
   VerifyHomeDomain,
   GenerateResolverRequest
 }
-
-
-const ssnAccountSK = "SALGX3VE6EP6DJL6YJLUDDO6GMA5ZFS62EC5YVCWSDRHVTCACHYEZ5R5"
-const message = "http://localhost:3000/v1/charge/onetime/37837941*master.mysabay.com"
-
-GenerateResolverRequest(ssnAccountSK, message).then(result => {
-  console.log(result)
-})
