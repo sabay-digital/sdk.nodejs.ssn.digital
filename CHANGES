@@ -1,3 +1,10 @@
+Version 1.1.0
+- Remove code unsing
+- Implements:
+  error-slack
+  constants
+  utils
+
 Version 1.0.2
 - Add function generate resolver request
 
