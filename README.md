@@ -167,3 +167,185 @@ GenerateResolverRequest(ssnAccountSK, message).then(result => {
   console.log(result)
 })
 ```
+
+# ssn-utils
+
+Utilities helper functions.
+  
+### promiseDelay(ms = 500) : {Promise}
+
+Delay for some sort of seconds and do the next promise
+
+```javascript
+
+var { promiseDelay } = require('sdk.nodejs.ssn.digital');
+
+const  fnPromise = () => {
+  return  new  Promise(resolve  => {
+    const  number = Math.random();
+    resolve(number);
+  });
+};
+
+promiseDelay()
+  .then(() => {
+    return  fnPromise();
+  })
+  .then(number  => {  
+    console.log(number);
+  });
+
+```
+
+### promiseRetry(fn, delay = 500, limit = 3) : {Promise}
+
+Retry the promise again when it's failed with some sort of delay in `ms` and limit of times
+
+```javascript
+
+var { promiseRetry } = require('sdk.nodejs.ssn.digital');
+
+const  fnPromise = () => {
+  return  new  Promise((resolve, reject) => {
+    const  number = Math.random();
+    // this promise will failed sometimes
+    if (number > 0.1) {
+      reject(number);
+    } else {
+      resolve(number);
+    }
+  });
+};
+
+promiseRetry(fnPromise)
+  .then(number  => {
+    console.log(number);
+  })
+  .catch(number  => {
+    console.error(number);
+  });
+
+```
+
+### now() : {string}
+
+Get today's datetime
+
+```javascript
+
+var { now } = require('sdk.nodejs.ssn.digital');
+
+console.log(now()); // 2019-05-16 14:53:38
+
+```
+
+### today() : {string}
+
+Get today's date
+
+```javascript
+
+var { today } = require('sdk.nodejs.ssn.digital');
+
+console.log(now()); // 2019-05-16
+
+```
+
+### toLocalDateTime(datetime = new Date()) : {string}
+
+Convert UTC Datetime to Local Datetime
+
+```javascript
+
+var { toLocalDateTime } = require('sdk.nodejs.ssn.digital');
+
+console.log(toLocalDateTime('2019-05-07T08:51:00Z')); // 2019-05-07 14:51:00
+
+```
+
+### toLocalDate(datetime = new Date()) : {string}
+
+Convert UTC Datetime to Local Date
+
+```javascript
+
+var { toLocalDate } = require('sdk.nodejs.ssn.digital');
+
+console.log(toLocalDate('2019-05-07T08:51:00Z')); // 2019-05-07
+
+```
+
+### chString(value) : {string}
+
+Wrap the provided value with a single quote for using in ClickHouse query with column type `string`
+
+```javascript
+
+var { chString } = require('sdk.nodejs.ssn.digital');
+
+const  value = 'foo';
+
+console.log(chString(value)); // return 'foo' NOT foo
+
+```
+
+### parseDate(String date) : {string|null}
+
+Validate if the `date` value is valid and return valid format of date or null.
+
+```javascript
+
+var { parseDate } = require('sdk.nodejs.ssn.digital');
+
+// Invalid date input
+
+const  date = 'foo';
+
+console.log(parseDate(date)); // return null
+
+// Valid date input
+
+const  date = '2019-07-22 00:00:00';
+
+console.log(parseDate(date)); // return '2019-07-22'
+
+```
+# ssn-stream-error-slack
+
+Send the error in the Stream to slack
+
+### streamErrorSlack(slackWebHook, error) : {void}
+
+Send an error in the stream file to Slack channel.
+
+```javascript
+var { streamErrorSlack } = require('sdk.nodejs.ssn.digital');
+
+const error = new Error('Something went wrong');
+
+// will send an error to slack channel
+streamErrorSlack(slackWebHook, error);
+```
+
+# ssn-constants
+
+The package that stored the frequently used constant values on SSN.
+
+## Usage
+
+```javascript
+var ssnConstants = require('sdk.nodejs.ssn.digital');
+
+console.log(ssnConstants.STATUS_PENDING); // pending
+```
+
+## Variables
+
+```javascript
+const STATUS_PENDING = 'pending';
+const STATUS_VERIFYING = 'verifying';
+const STATUS_COMPLETED = 'completed';
+const STATUS_FAILED = 'failed';
+const STATUS_CANCELED = 'canceled';
+const STATUS_REJECTED = 'rejected';
+```

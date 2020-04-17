@@ -1,3 +1,4 @@
+// Payments
 var {
   CreatePayment,
   ResolvePA,
@@ -11,6 +12,33 @@ var {
   GenerateResolverRequest
 } = require('./payments/index')
 
+// Utils
+var {
+  promiseDelay,
+  promiseRetry,
+  toLocalDateTime,
+  toLocalDate,
+  now,
+  today,
+  chString,
+  parseDate
+} = require('./utils/index')
+
+// Constants
+
+var {
+  STATUS_PENDING,
+  STATUS_VERIFYING,
+  STATUS_COMPLETED,
+  STATUS_FAILED,
+  STATUS_CANCELED,
+  STATUS_REJECTED
+} = require('./constants/index')
+
+// Error-slack
+
+var streamErrorSlack = require('./error-slack/index')
+
 module.exports = {
   CreatePayment,
   ResolvePA,
@@ -21,7 +49,22 @@ module.exports = {
   VerifySignature,
   VerifySigner,
   VerifyHomeDomain,
-  GenerateResolverRequest
+  GenerateResolverRequest,
+  promiseDelay,
+  promiseRetry,
+  toLocalDateTime,
+  toLocalDate,
+  now,
+  today,
+  chString,
+  parseDate,
+  streamErrorSlack,
+  STATUS_PENDING,
+  STATUS_VERIFYING,
+  STATUS_COMPLETED,
+  STATUS_FAILED,
+  STATUS_CANCELED,
+  STATUS_REJECTED
 }
 
 
