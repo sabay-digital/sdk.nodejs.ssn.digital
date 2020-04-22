@@ -39,6 +39,9 @@ var {
 
 var streamErrorSlack = require('./error-slack/index')
 
+// Api standard response
+var apiResponse = require('./api-standard-response/index')
+
 module.exports = {
   CreatePayment,
   ResolvePA,
@@ -59,6 +62,7 @@ module.exports = {
   chString,
   parseDate,
   streamErrorSlack,
+  apiResponse,
   STATUS_PENDING,
   STATUS_VERIFYING,
   STATUS_COMPLETED,

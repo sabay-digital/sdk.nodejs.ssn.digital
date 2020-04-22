@@ -349,3 +349,23 @@ const STATUS_FAILED = 'failed';
 const STATUS_CANCELED = 'canceled';
 const STATUS_REJECTED = 'rejected';
 ```
+# apiResponse
+
+The package is use for api response standard format with options send to slack.
+
+```javascript
+const { apiResponse } = require('sdk.nodejs.ssn.digital');
+
+// NOTE: Please use in middleware as example below:
+
+module.exports = function (req, res, next) {
+  const opts = {
+    slack: true | false, // by default false is not send to slack
+    name: 'environment',
+    url: 'slack webhook url'
+  }
+
+  apiResponse(req, res, opts)
+  next()
+}
+```
