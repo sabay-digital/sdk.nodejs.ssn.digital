@@ -30,7 +30,7 @@ function streamErrorSlack(slackWebHook, Error) {
 
   let level = 'good'
   let label = 'INFO'
-  if (includes([400, 401, 402, 403], Error.status)) {
+  if (includes([400, 401, 402, 403, 404], Error.status)) {
     level = 'warning'
     label = 'WARNING'
   }
@@ -47,7 +47,7 @@ function streamErrorSlack(slackWebHook, Error) {
     text: [
       { title: 'Stack', code: Error.stack },
       { title: 'Request:', code: Error.message },
-      { title: 'Response:', code: Error.response ? (Error.response || Error.response.data) : Error.data || Error },
+      { title: 'Response:', code: Error.response ? (Error.response || Error.response.data) : ({ status: Error.status, data: Error.data } || Error) },
     ].map(data => createCodeBlock(data.title, data.code)).join(''),
     mrkdwn_in: ['text'],
     footer: 'ssn-stream-error-slack',
