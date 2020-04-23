@@ -15,6 +15,28 @@ function apiResponse (req, res, opts) {
   }
 
   const isSlackEnable = opts.slack || false
+
+  // Handle render html...
+  /**
+   * {path to html} html
+   * {any} data
+   * {any} message
+   */
+  res.renderTo = function (html, data = null, message = null) {
+    if (isSlackEnable) {
+      // Send log to slack
+      streamErrorSlack(opts.url, {  
+        status: 200,
+        name: opts.name,
+        message: req.originalUrl,
+        data: message === null ? data : message
+      })
+    }
+    if (data !== null) {
+      return res.render(html, data)
+    }
+    return res.render(url)
+  }
  
   // Handle redirect to...
   res.redirectTo = function (url) {
@@ -63,7 +85,7 @@ function apiResponse (req, res, opts) {
       }
       return res.status(error.status).json({
         status: error.status,
-        message: error.message
+        message: error.message ? error.message : error.title
       })
     } else {
       // handles not found errors
@@ -74,12 +96,12 @@ function apiResponse (req, res, opts) {
             status: 404,
             name: opts.name,
             message: req.originalUrl,
-            data: error.message
+            data: error.message ? error.message : error.title
           })
         }
         return res.status(404).json({
           status: 404,
-          message: error.message
+          message: error.message ? error.message : error.title
         })
       } else {
         if (isSlackEnable) {
@@ -88,12 +110,12 @@ function apiResponse (req, res, opts) {
             status: 500,
             name: opts.name,
             message: req.originalUrl,
-            data: error.message
+            data: error.message ? error.message : error.title
           })
         }
         // Unknown error
         return res.status(500).json({
-          message: error.message
+          message: error.message ? error.message : error.title
         })
       }
     }
