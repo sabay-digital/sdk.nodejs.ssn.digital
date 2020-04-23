@@ -16,6 +16,13 @@ function apiResponse (req, res, opts) {
 
   const isSlackEnable = opts.slack || false
 
+  // Get request
+  const fullRequest = { 
+    host: req.protocol + '://' + req.get('host') + req.originalUrl, 
+    headers: req.headers, 
+    body: req.body 
+  }
+
   // Handle render html...
   /**
    * {path to html} html
@@ -28,7 +35,7 @@ function apiResponse (req, res, opts) {
       streamErrorSlack(opts.url, {  
         status: 200,
         name: opts.name,
-        message: req.originalUrl,
+        message: fullRequest,
         data: message === null ? data : message
       })
     }
@@ -45,7 +52,7 @@ function apiResponse (req, res, opts) {
       streamErrorSlack(opts.url, {
         status: 200,
         name: opts.name,
-        message: req.originalUrl,
+        message: fullRequest,
         data: opts.url
       })
     }
@@ -59,7 +66,7 @@ function apiResponse (req, res, opts) {
       streamErrorSlack(opts.url, {
         status: 200,
         name: opts.name,
-        message: req.originalUrl,
+        message: fullRequest,
         data: data
       })
     }
@@ -79,7 +86,7 @@ function apiResponse (req, res, opts) {
         streamErrorSlack(opts.url, {
           status: error.status,
           name: opts.name,
-          message: req.originalUrl,
+          message: fullRequest,
           data: error
         })
       }
@@ -95,7 +102,7 @@ function apiResponse (req, res, opts) {
           streamErrorSlack(opts.url, {
             status: 404,
             name: opts.name,
-            message: req.originalUrl,
+            message: fullRequest,
             data: error.message ? error.message : error.title
           })
         }
@@ -109,7 +116,7 @@ function apiResponse (req, res, opts) {
           streamErrorSlack(opts.url, {
             status: 500,
             name: opts.name,
-            message: req.originalUrl,
+            message: fullRequest,
             data: error.message ? error.message : error.title
           })
         }
