@@ -1,3 +1,6 @@
+Version 1.1.1
+- Implement: Api response standard format with slack option.
+
 Version 1.1.0
 - Remove unused code
 - Implements:
