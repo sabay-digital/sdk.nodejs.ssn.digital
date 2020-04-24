@@ -1,5 +1,5 @@
 var Slack = require('slack-node');
-var { extend, isEmpty } = require('lodash');
+var { extend, isEmpty, includes } = require('lodash');
 
 /**
  * @param {string} title 
@@ -28,13 +28,26 @@ function streamErrorSlack(slackWebHook, Error) {
 
   slack.setWebhook(slackWebHook);
 
+  let level = 'good'
+  let label = 'INFO'
+  if (includes([400, 401, 402, 403, 404], Error.status)) {
+    level = 'warning'
+    label = 'WARNING'
+  }
+
+  if (Error.status >= 500) {
+    level = 'danger'
+    label = 'ERROR'
+  }
+
   const attachment = extend({}, {
     fallback: `${Error.name}: ${Error.message}`,
-    color: (Error.status < 500) ? 'warning' : 'danger',
-    title: `${Error.name}: ${Error.message}`,
+    color: level,
+    title: `${Error.name}\r\n${label}`,
     text: [
       { title: 'Stack', code: Error.stack },
-      { title: 'Response', code: Error.response ? (Error.response.data || Error.response) : Error },
+      { title: 'Request:', code: Error.message },
+      { title: 'Response:', code: Error.response ? (Error.response || Error.response.data) : ({ status: Error.status, data: Error.data } || Error) },
     ].map(data => createCodeBlock(data.title, data.code)).join(''),
     mrkdwn_in: ['text'],
     footer: 'ssn-stream-error-slack',

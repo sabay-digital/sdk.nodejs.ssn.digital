@@ -15,6 +15,35 @@ function apiResponse (req, res, opts) {
   }
 
   const isSlackEnable = opts.slack || false
+
+  // Get request
+  const fullRequest = { 
+    host: req.protocol + '://' + req.get('host') + req.originalUrl, 
+    headers: req.headers, 
+    body: req.body 
+  }
+ 
+  // Handle render html...
+  /**
+   * {path to html} html
+   * {any} data
+   * {any} message
+   */
+  res.renderTo = function (html, data = null, message = null) {
+    if (isSlackEnable) {
+      // Send log to slack
+      streamErrorSlack(opts.url, {  
+        status: 200,
+        name: opts.name,
+        message: fullRequest,
+        data: message === null ? data : message
+      })
+    }
+    if (data !== null) {
+      return res.render(html, data)
+    }
+    return res.render(url)
+  }
  
   // Handle redirect to...
   res.redirectTo = function (url) {
@@ -23,7 +52,7 @@ function apiResponse (req, res, opts) {
       streamErrorSlack(opts.url, {
         status: 200,
         name: opts.name,
-        message: req.originalUrl,
+        message: fullRequest,
         data: opts.url
       })
     }
@@ -37,7 +66,7 @@ function apiResponse (req, res, opts) {
       streamErrorSlack(opts.url, {
         status: 200,
         name: opts.name,
-        message: req.originalUrl,
+        message: fullRequest,
         data: data
       })
     }
@@ -57,13 +86,13 @@ function apiResponse (req, res, opts) {
         streamErrorSlack(opts.url, {
           status: error.status,
           name: opts.name,
-          message: req.originalUrl,
+          message: fullRequest,
           data: error
         })
       }
       return res.status(error.status).json({
         status: error.status,
-        message: error.message
+        message: error.message ? error.message : error.title
       })
     } else {
       // handles not found errors
@@ -73,13 +102,13 @@ function apiResponse (req, res, opts) {
           streamErrorSlack(opts.url, {
             status: 404,
             name: opts.name,
-            message: req.originalUrl,
-            data: error.message
+            message: fullRequest,
+            data: error.message ? error.message : error.title
           })
         }
         return res.status(404).json({
           status: 404,
-          message: error.message
+          message: error.message ? error.message : error.title
         })
       } else {
         if (isSlackEnable) {
@@ -87,13 +116,13 @@ function apiResponse (req, res, opts) {
           streamErrorSlack(opts.url, {
             status: 500,
             name: opts.name,
-            message: req.originalUrl,
-            data: error.message
+            message: fullRequest,
+            data: error.message ? error.message : error.title
           })
         }
         // Unknown error
         return res.status(500).json({
-          message: error.message
+          message: error.message ? error.message : error.title
         })
       }
     }
