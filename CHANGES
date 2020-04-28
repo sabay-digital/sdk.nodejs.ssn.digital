@@ -1,3 +1,8 @@
+Version 1.2.0
+- Implements: 
+  - toPrefixWithEightFiveFive
+  - toPrefixWithZero
+
 Version 1.1.2
 - Fix api response function to support render and title property
 

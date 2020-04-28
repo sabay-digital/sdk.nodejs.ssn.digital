@@ -42,6 +42,13 @@ var streamErrorSlack = require('./error-slack/index')
 // Api standard response
 var apiResponse = require('./api-standard-response/index')
 
+// Phone format
+var {
+  toPrefixWithEightFiveFive,
+  toPrefixWithZero
+} = require('./phone-format/index')
+
+
 module.exports = {
   CreatePayment,
   ResolvePA,
@@ -68,7 +75,9 @@ module.exports = {
   STATUS_COMPLETED,
   STATUS_FAILED,
   STATUS_CANCELED,
-  STATUS_REJECTED
+  STATUS_REJECTED,
+  toPrefixWithZero,
+  toPrefixWithEightFiveFive
 }
 
 

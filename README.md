@@ -369,3 +369,24 @@ module.exports = function (req, res, next) {
   next()
 }
 ```
+# ssn-phone
+
+Generic functions for formatting phone numbers.
+
+### toPrefixWithEightFiveFive(phone: string) : {string|null}
+
+```javascript
+var { toPrefixWithEightFiveFive } = require('sdk.nodejs.ssn.digital');
+
+console.log(toPrefixWithEightFiveFive('085222111'));
+// output: 85585222111
+```
+
+### toPrefixWithZero(phone: string) : {string|null}
+
+```javascript
+var { toPrefixWithZero } = require('ssn-phone');
+
+console.log(toPrefixWithZero('85585222111'));
+// output: 085222111
+``
