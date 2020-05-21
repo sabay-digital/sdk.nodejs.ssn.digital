@@ -1,4 +1,5 @@
 var axios = require('axios')
+var axiosRetry = require('axios-retry')
 var querystring = require('querystring')
 var StellarSDK = require('stellar-sdk')
 var crypto = require('crypto')
@@ -16,7 +17,15 @@ var crypto = require('crypto')
 
 const CreatePayment = (from, to, amount, assetCode, assetIssuer, memo, api) => {
   return new Promise((resolve, reject) => {
-   
+    
+    // retries if it is a network error or a 5xx error when request
+    axiosRetry(axios, {
+      retryDelay: (retryCount) => {
+
+        return retryCount * 1000
+      },
+      retries: 5
+    })
     // Create transaction channel accounts on the ssn api
     return axios.post(api + '/create/transaction',
       querystring.stringify({
@@ -79,6 +88,16 @@ const SignTxn = (xdr, signer, networkPassphrase) => new Promise((resolve, reject
 // SignTxnService takes a base64 encoded XDR envelope and sends it to the specified sign service API
 const SignTxnService = (xdr, signer) => new Promise((resolve, reject) => {
   try {
+
+    // retries if it is a network error or a 5xx error when request
+    axiosRetry(axios, {
+      retryDelay: (retryCount) => {
+
+        return retryCount * 1000
+      },
+      retries: 5
+    })
+
     const signRequest = {
       xdr_string: xdr
     }
@@ -102,6 +121,16 @@ const SignTxnService = (xdr, signer) => new Promise((resolve, reject) => {
 
 const SubmitTxn = (xdr, api) => new Promise((resolve, reject) => {
   try {
+    
+    // retries if it is a network error or a 5xx error when request
+    axiosRetry(axios, {
+      retryDelay: (retryCount) => {
+
+        return retryCount * 1000
+      },
+      retries: 5
+    })
+
     return axios.post(api + '/transactions',
       querystring.stringify({
         tx: xdr
@@ -276,9 +305,7 @@ const GenerateResolverRequest = (ssnAccountSK, message) => new Promise((resolve,
     hash.update(message)
     const sha256Hash = hash.digest('hex')
     const str = Buffer.from(sha256Hash, 'hex')
-    console.log(sha256Hash)
-    console.log(str)
-    console.log(str.toString('hex'))
+    
     // sign signature
     const signature = keyPair.sign(str)
     
