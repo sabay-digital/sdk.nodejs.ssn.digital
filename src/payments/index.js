@@ -43,7 +43,9 @@ const CreatePayment = (from, to, amount, assetCode, assetIssuer, memo, api) => {
         } 
         return reject(null)
       })
-      .catch(reject)
+      .catch(error => {
+        return reject(error)
+      })
    
   })
 }
@@ -87,29 +89,25 @@ const SignTxn = (xdr, signer, networkPassphrase) => new Promise((resolve, reject
  */
 // SignTxnService takes a base64 encoded XDR envelope and sends it to the specified sign service API
 const SignTxnService = (xdr, signer) => new Promise((resolve, reject) => {
-  try {
+  // retries if it is a network error or a 5xx error when request
+  axiosRetry(axios, {
+    retryDelay: (retryCount) => {
 
-    // retries if it is a network error or a 5xx error when request
-    axiosRetry(axios, {
-      retryDelay: (retryCount) => {
+      return retryCount * 1000
+    },
+    retries: 5
+  })
 
-        return retryCount * 1000
-      },
-      retries: 5
-    })
-
-    const signRequest = {
-      xdr_string: xdr
-    }
-    return axios.post(signer, signRequest)
-    .then(result => {
-      return resolve(result.data.xdr_string)
-    })
-    .catch(reject)
+  const signRequest = {
+    xdr_string: xdr
   }
-  catch (error) {
+  return axios.post(signer, signRequest)
+  .then(result => {
+    return resolve(result.data.xdr_string)
+  })
+  .catch(error => {
     return reject(error)
-  }
+  })
 })
 
 /**
@@ -120,30 +118,26 @@ const SignTxnService = (xdr, signer) => new Promise((resolve, reject) => {
  */
 
 const SubmitTxn = (xdr, api) => new Promise((resolve, reject) => {
-  try {
-    
-    // retries if it is a network error or a 5xx error when request
-    axiosRetry(axios, {
-      retryDelay: (retryCount) => {
+  // retries if it is a network error or a 5xx error when request
+  axiosRetry(axios, {
+    retryDelay: (retryCount) => {
 
-        return retryCount * 1000
-      },
-      retries: 5
-    })
+      return retryCount * 1000
+    },
+    retries: 5
+  })
 
-    return axios.post(api + '/transactions',
-      querystring.stringify({
-        tx: xdr
-      })
-    )
-    .then((result) => {
-      return resolve(result.data)
+  return axios.post(api + '/transactions',
+    querystring.stringify({
+      tx: xdr
     })
-    .catch(reject)
-  }
-  catch (error) {
+  )
+  .then((result) => {
+    return resolve(result.data)
+  })
+  .catch(error => {
     return reject(error)
-  }
+  })
 })
 
 
@@ -171,13 +165,13 @@ const ResolvePA = (paymentAddress, hash, signature, signer, ssnAcc, resolverURL)
         })
       ).then(result => {
         if (result.data.status && result.data.status !== 200) {
-          reject(result.data)
+          return reject(result.data)
         }
         
-        resolve(result.data)
+        return resolve(result.data)
       })
     } catch (error) {
-      reject(error)
+      return reject(error)
     }
   })
 }
@@ -192,7 +186,7 @@ const ResolvePA = (paymentAddress, hash, signature, signer, ssnAcc, resolverURL)
  */
 
 const VerifyTrust = (destination, asset, assetIssuer, api) => new Promise((resolve, reject) => {
-  axios.post(api + '/verify/trust',
+  return axios.post(api + '/verify/trust',
     querystring.stringify({
       account: destination,
       asset_code: asset,

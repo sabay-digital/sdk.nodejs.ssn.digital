@@ -30,7 +30,7 @@ function streamErrorSlack(slackWebHook, Error) {
 
   let level = 'good'
   let label = 'INFO'
-  if (includes([400, 401, 402, 403, 404], Error.status)) {
+  if (Error.status >= 400 && Error.status < 500) {
     level = 'warning'
     label = 'WARNING'
   }
