@@ -104,7 +104,7 @@ const SignTxnService = (xdr, signer, jwtkey) => new Promise((resolve, reject) =>
     exp: Math.floor(Date.now() / 1000) + 60,
     iss: "SSN",
     sub: "Sign txn request"
-  }, jwtkey)
+  }, Buffer.from(jwtkey, 'base64'))
 
   const signRequest = {
     envelope_xdr: xdr,
