@@ -1,3 +1,6 @@
+Version 1.3.0
+- Add JWT token generation to SignTxnService
+
 Version 1.2.2
 - Fix function no return
 - Fix error slack

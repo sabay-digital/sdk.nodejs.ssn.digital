@@ -132,9 +132,9 @@ var { SignTxnService } = require('sdk.nodejs.ssn.digital');
 
 const xdr = "xdr_string"
 const signer = "https://cashier-signer01.master.ssn.digital/api/sign"
+const jwtkey = "testjwtkey"
 
-
-SignTxnService(xdr, signer).then(result => {
+SignTxnService(xdr, signer, jwtkey).then(result => {
   console.log(result)
 }).catch(error =>  console.log(error))
 ```

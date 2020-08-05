@@ -3,6 +3,7 @@ var axiosRetry = require('axios-retry')
 var querystring = require('querystring')
 var StellarSDK = require('stellar-sdk')
 var crypto = require('crypto')
+var jwt = require('jsonwebtoken')
 /**
  * @param {string} from
  * @param {string} to
@@ -84,11 +85,12 @@ const SignTxn = (xdr, signer, networkPassphrase) => new Promise((resolve, reject
 /**
  * @param {string} xdr
  * @param {string} signer
+ * @param {string} jwtkey
  *
  * @returns {Promise<Object>}
  */
 // SignTxnService takes a base64 encoded XDR envelope and sends it to the specified sign service API
-const SignTxnService = (xdr, signer) => new Promise((resolve, reject) => {
+const SignTxnService = (xdr, signer, jwtkey) => new Promise((resolve, reject) => {
   // retries if it is a network error or a 5xx error when request
   axiosRetry(axios, {
     retryDelay: (retryCount) => {
@@ -98,12 +100,19 @@ const SignTxnService = (xdr, signer) => new Promise((resolve, reject) => {
     retries: 5
   })
 
+  var token = jwt.sign({ 
+    exp: Math.floor(Date.now() / 1000) + 60,
+    iss: "SSN",
+    sub: "Sign txn request"
+  }, Buffer.from(jwtkey, 'base64'))
+
   const signRequest = {
-    xdr_string: xdr
+    envelope_xdr: xdr,
+    access_token: token
   }
   return axios.post(signer, signRequest)
   .then(result => {
-    return resolve(result.data.xdr_string)
+    return resolve(result.data.envelope_xdr)
   })
   .catch(error => {
     return reject(error)
