@@ -15,6 +15,7 @@ function apiResponse (req, res, opts) {
   }
 
   const isSlackEnable = opts.slack || false
+  const logLevel = opts.log_level || 'info'
 
   // Get request
   const fullRequest = { 
@@ -30,7 +31,7 @@ function apiResponse (req, res, opts) {
    * {any} message
    */
   res.renderTo = function (html, data = null, message = null) {
-    if (isSlackEnable) {
+    if (isSlackEnable && logLevel === 'info') {
       // Send log to slack
       streamErrorSlack(opts.url, {  
         status: 200,
@@ -47,7 +48,7 @@ function apiResponse (req, res, opts) {
  
   // Handle redirect to...
   res.redirectTo = function (url) {
-    if (isSlackEnable) {
+    if (isSlackEnable && logLevel === 'info') {
       // Send log to slack
       streamErrorSlack(opts.url, {
         status: 200,
@@ -61,7 +62,7 @@ function apiResponse (req, res, opts) {
 
   // Handle only HttpStatus Code 200.
   res.ok = function (data) {
-    if (isSlackEnable) {
+    if (isSlackEnable && logLevel === 'info') {
       // Send log to slack
       streamErrorSlack(opts.url, {
         status: 200,
@@ -81,7 +82,7 @@ function apiResponse (req, res, opts) {
   res.error = function (error) {
     // handles unauthorized errors or not full filled
     if (_.includes([400, 401, 402, 403], error.status)) {
-      if (isSlackEnable) {
+      if (isSlackEnable && logLevel === 'error') {
         // Send log to slack
         streamErrorSlack(opts.url, {
           status: error.status,
@@ -97,7 +98,7 @@ function apiResponse (req, res, opts) {
     } else {
       // handles not found errors
       if (error.name === 'AssertionError' || error.status === 404) {
-        if (isSlackEnable) {
+        if (isSlackEnable && logLevel === 'error') {
           // Send log to slack
           streamErrorSlack(opts.url, {
             status: 404,
@@ -111,7 +112,7 @@ function apiResponse (req, res, opts) {
           message: error.message ? error.message : error.title
         })
       } else {
-        if (isSlackEnable) {
+        if (isSlackEnable && logLevel === 'error') {
           // Send log to slack
           streamErrorSlack(opts.url, {
             status: 500,
