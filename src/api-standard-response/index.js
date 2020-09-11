@@ -15,7 +15,7 @@ function apiResponse (req, res, opts) {
   }
 
   const isSlackEnable = opts.slack || false
-  const logLevel = opts.log_level || 'info'
+  const logLevel = opts.log_level || 'error'
 
   // Get request
   const fullRequest = { 
