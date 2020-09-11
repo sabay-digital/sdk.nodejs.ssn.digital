@@ -1,3 +1,7 @@
+Version 1.3.2
+- Improve slack log
+ - Log level
+ 
 Version 1.3.1
 - Fix bug can't find jsonwebtoken module
 
