@@ -163,25 +163,20 @@ const SubmitTxn = (xdr, api) => new Promise((resolve, reject) => {
 
 const ResolvePA = (paymentAddress, hash, signature, signer, ssnAcc, resolverURL) => {
   return new Promise((resolve, reject) => {
-    try {
-      // resolve network address from payment address
-      return axios.post(resolverURL + '/resolve/' + paymentAddress,
-        querystring.stringify({
-          hash: hash,
-          signature: signature,
-          signer: signer,
-          ssn_account: ssnAcc
-        })
-      ).then(result => {
-        if (result.data.status && result.data.status !== 200) {
-          return reject(result.data)
-        }
-        
-        return resolve(result.data)
+    // resolve network address from payment address
+    return axios.post(resolverURL + '/resolve/' + paymentAddress,
+      querystring.stringify({
+        hash: hash,
+        signature: signature,
+        signer: signer,
+        ssn_account: ssnAcc
       })
-    } catch (error) {
+    ).then(result => {
+      return resolve(result.data)
+    })
+    .catch(error => {
       return reject(error)
-    }
+    })
   })
 }
 
