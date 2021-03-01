@@ -14,8 +14,6 @@ var {
 
 // Utils
 var {
-  promiseDelay,
-  promiseRetry,
   toLocalDateTime,
   toLocalDate,
   now,
@@ -60,8 +58,6 @@ module.exports = {
   VerifySigner,
   VerifyHomeDomain,
   GenerateResolverRequest,
-  promiseDelay,
-  promiseRetry,
   toLocalDateTime,
   toLocalDate,
   now,
@@ -79,7 +75,3 @@ module.exports = {
   toPrefixWithZero,
   toPrefixWithEightFiveFive
 }
-
-
-
-
