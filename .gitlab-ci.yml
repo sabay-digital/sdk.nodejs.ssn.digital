@@ -1,0 +1,18 @@
+stages:
+- deploy
+    
+# publish to registry
+publish:
+    stage: deploy
+    image: docker-registry.sabay.com/docker/node
+    before_script:
+        - git config --global user.email "moun.chhaily@sabay.com"
+        - git config --global user.name "Sabay Digital Corporation"
+        - npm version ${CI_COMMIT_TAG}
+    script:
+        - echo '//verdaccio.sabay.com/:_authToken=${NPM_AUTH_TOKEN}'>.npmrc
+        - npm publish
+    only:
+        - tags
+    tags:
+        - docker
