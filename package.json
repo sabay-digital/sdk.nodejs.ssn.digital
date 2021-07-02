@@ -17,6 +17,6 @@
     "moment": "^2.29.1",
     "querystring": "^0.2.1",
     "slack-node": "^0.1.8",
-    "stellar-sdk": "^8.0.0"
+    "stellar-sdk": "^8.2.3"
   }
 }
